@@ -96,6 +96,7 @@ export async function extractTar(
   await exec.exec('tar', [
     '-x',
     ...compressionArgs,
+    '-k',
     '-P',
     '-f',
     archivePath,

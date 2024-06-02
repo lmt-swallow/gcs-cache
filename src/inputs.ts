@@ -17,12 +17,14 @@ export function getInputs(): Inputs {
     keyFileName: core.getInput('key-file-name'),
     compressionMethod: core.getInput('compression-method'),
     restoreKeys: core
-      .getInput('restore-keys')
-      .split(',')
-      .filter((path) => path),
+      .getMultilineInput('restore-keys')    
+      .map(s => s.replace(/^!\s+/, "!").trim())
+      .filter(x => x !== ""),
   };
 
   core.debug(`Loaded inputs: ${JSON.stringify(inputs)}.`);
+  console.log(`Restore keys: ${JSON.stringify(inputs.restoreKeys)}.`)
 
+  
   return inputs;
 }
