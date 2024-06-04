@@ -86,21 +86,15 @@ export async function extractTar(
     `🔹 Detected '${compressionMethod}' compression method from object metadata.`,
   );
 
-  const compressionArgs =
+  const args =
     compressionMethod === CompressionMethod.GZIP
       ? ['-z']
       : compressionMethod === CompressionMethod.ZSTD_WITHOUT_LONG
       ? ['--use-compress-program', 'zstd -d']
       : ['--use-compress-program', 'zstd -d --long=30'];
+  if (process.platform.toString() != 'darwin') {
+    args.push('--overwrite');
+  }
 
-  await exec.exec('tar', [
-    '-x',
-    ...compressionArgs,
-    '-k',
-    '-P',
-    '-f',
-    archivePath,
-    '-C',
-    cwd,
-  ]);
+  await exec.exec('tar', ['-x', ...args, '-P', '-f', archivePath, '-C', cwd]);
 }
